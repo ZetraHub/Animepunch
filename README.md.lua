@@ -591,4 +591,48 @@ local AutoEquipToggle = Tabs.Eggs:AddToggle("AutoEquipToggle", {
     end
 })
 
+local attackSpeed = 0.2 -- Valor padrão do slider (velocidade de ataque)
+local minSpeed = 0.1 -- Valor mínimo do slider
+local maxSpeed = 1 -- Valor máximo do slider
+local step = 0.1 -- O quanto o valor muda quando o slider é ajustado
+
+-- Função para ajustar o valor do slider
+local function adjustSlider(value)
+    attackSpeed = math.clamp(value, minSpeed, maxSpeed) -- Mantém o valor entre o mínimo e o máximo
+    print("Velocidade de ataque ajustada para:", attackSpeed)
+end
+
+-- Adiciona o slider para ajustar o valor do attackSpeed na aba "Settings"
+Tabs.Settings:AddSlider("AttackSpeedSlider", {
+    Title = "Velocidade de Ataque",
+    Min = minSpeed,
+    Max = maxSpeed,
+    Default = attackSpeed,
+    Step = step,
+    Callback = function(value)
+        adjustSlider(value) -- Ajusta o valor do slider
+    end
+})
+
+-- Exemplo de uso: ataque automático usando a velocidade ajustada pelo slider
+local function autoAttack()
+    while attackEnabled do
+        -- Aqui você colocaria o código do ataque, usando attackSpeed para controlar o tempo entre os ataques
+        print("Atacando com velocidade:", attackSpeed)
+        wait(attackSpeed) -- Usa o valor do slider como intervalo entre os ataques
+    end
+end
+
+-- Adiciona o toggle para ativar/desativar o auto attack na aba "Auto Farm"
+Tabs.AutoFarm:AddToggle("AutoAttackToggle", {
+    Title = "Auto Attack",
+    Default = false,
+    Callback = function(value)
+        attackEnabled = value
+        if attackEnabled then
+            spawn(autoAttack) -- Inicia o ataque automático
+        end
+    end
+})
+
 -- Slidhow to add more functions to my hub script when it is too full# Animepunch
